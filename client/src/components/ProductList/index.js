@@ -1,20 +1,28 @@
 import React, { useEffect } from 'react';
-import { useStoreContext } from '../../utils/GlobalState';
 import { UPDATE_PRODUCTS } from '../../utils/actions';
 import { useQuery } from '@apollo/react-hooks';
-
 import ProductItem from "../ProductItem";
 import { QUERY_PRODUCTS } from "../../utils/queries";
 import spinner from "../../assets/spinner.gif"
 import { idbPromise } from "../../utils/helpers";
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 function ProductList() {
 
-  const [state, dispatch] = useStoreContext();
-  const { currentCategory } = state;
-  const { loading, data } = useQuery(QUERY_PRODUCTS);
 
-  //const products = data?.products || [];
+  // get category and product information from redux state
+   
+  const currentCategoryI  = state => state.currentCategory;
+  const currentCategory = useSelector(currentCategoryI);
+  const productsI  = state => state.products;
+  const products = useSelector(productsI);
+
+  // define dispatch for redux
+  const dispatch = useDispatch();
+  const { loading, data } = useQuery(QUERY_PRODUCTS);
+  
+
 
   useEffect(() => {
     if(data) {
@@ -42,10 +50,10 @@ function ProductList() {
 
   function filterProducts() {
     if (!currentCategory) {
-      return state.products;
+      return products;
     }
   
-    return state.products.filter(product => product.category._id === currentCategory);
+    return products.filter(product => product.category._id === currentCategory);
   }
 
 
@@ -53,7 +61,7 @@ function ProductList() {
   return (
     <div className="my-2">
       <h2>Our Products:</h2>
-      {state.products.length ? (
+      {products.length ? (
         <div className="flex-row">
             {filterProducts().map(product => (
                 <ProductItem
