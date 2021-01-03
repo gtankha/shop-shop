@@ -19,8 +19,8 @@ const Cart = () => {
     const stateCartI = state => state.cartOpen;
     const cartOpen = useSelector(stateCartI);
 
+    // dispatch using redux
     const dispatch = useDispatch();
-   // const [state, dispatch] = useStoreContext();
     const [getCheckout, { data }] = useLazyQuery(QUERY_CHECKOUT);
     useEffect(() => {
         if (data) {
